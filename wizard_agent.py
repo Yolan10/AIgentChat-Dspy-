@@ -3,8 +3,9 @@ from __future__ import annotations
 
 from typing import Dict, List
 
-from langchain.chat_models import ChatOpenAI
-from langchain.schema import AIMessage, HumanMessage, SystemMessage
+from langchain_openai import ChatOpenAI
+from langchain_core.messages import AIMessage, HumanMessage, SystemMessage
+
 
 import config
 import utils
@@ -56,7 +57,9 @@ class WizardAgent:
                     messages.append(HumanMessage(content=t["text"]))
                 else:
                     messages.append(AIMessage(content=t["text"]))
-            wizard_msg = self.llm(messages).content
+
+            wizard_msg = self.llm.invoke(messages).content
+
             log["turns"].append({"speaker": "wizard", "text": wizard_msg, "time": utils.get_timestamp()})
             pop_reply = pop_agent.respond_to(wizard_msg)
             log["turns"].append({"speaker": "pop", "text": pop_reply, "time": utils.get_timestamp()})
