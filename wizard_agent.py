@@ -96,5 +96,6 @@ class WizardAgent:
 
         log_path = f"improve_{utils.get_timestamp().replace(':', '').replace('-', '')}.json"
         utils.save_conversation_log({"prompt": self.current_prompt, "metrics": metrics}, log_path)
+        print(f"Wizard improved prompt saved to {log_path}")
 
         self.history_buffer.clear()
