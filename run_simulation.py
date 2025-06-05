@@ -17,11 +17,18 @@ def main():
 
         filename = f"{wizard.wizard_id}_{pop_agent.agent_id}_{utils.get_timestamp().replace(':', '').replace('-', '')}.json"
         utils.save_conversation_log(log, filename)
-        summary.append({
+        spec = pop_agent.get_spec()
+        entry = {
             "pop_agent_id": pop_agent.agent_id,
+            "name": spec.get("name"),
+            "personality_description": spec.get("personality_description"),
+            "system_instruction": spec.get("system_instruction"),
+            "temperature": spec.get("llm_settings", {}).get("temperature"),
+            "max_tokens": spec.get("llm_settings", {}).get("max_tokens"),
             "success": log["judge_result"].get("success"),
             "score": log["judge_result"].get("score"),
-        })
+        }
+        summary.append(entry)
     utils.save_conversation_log(summary, "summary.json")
     print(f"Completed {len(population)} conversations.")
 
