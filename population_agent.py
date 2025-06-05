@@ -40,6 +40,8 @@ class PopulationAgent:
 
         self.history.append(("wizard", user_message))
         self.history.append(("pop", response))
+        if len(self.history) > config.POP_HISTORY_LIMIT:
+            self.history = self.history[-config.POP_HISTORY_LIMIT:]
         return response
 
     def get_persona(self) -> dict:
