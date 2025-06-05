@@ -4,8 +4,8 @@ from __future__ import annotations
 from typing import Dict
 
 import json
-from langchain.chat_models import ChatOpenAI
-from langchain.schema import HumanMessage, SystemMessage
+from langchain_openai import ChatOpenAI
+from langchain_core.messages import HumanMessage, SystemMessage
 
 import config
 import utils
@@ -29,5 +29,5 @@ class JudgeAgent:
         transcript = "\n".join([f"{t['speaker']}: {t['text']}" for t in log["turns"]])
         prompt = utils.render_template(self.template, {"goal": log.get("goal"), "transcript": transcript})
         messages = [SystemMessage(content=prompt), HumanMessage(content="Return JSON with success, score, rationale.")]
-        result = self.llm(messages).content
+        result = self.llm.invoke(messages).content
         return json.loads(result)

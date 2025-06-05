@@ -1,8 +1,8 @@
 """Defines the PopulationAgent persona."""
 from typing import List, Tuple
 
-from langchain.chat_models import ChatOpenAI
-from langchain.schema import AIMessage, HumanMessage, SystemMessage
+from langchain_openai import ChatOpenAI
+from langchain_core.messages import AIMessage, HumanMessage, SystemMessage
 
 import config
 import utils
@@ -35,7 +35,7 @@ class PopulationAgent:
             else:
                 messages.append(AIMessage(content=text))
         messages.append(HumanMessage(content=user_message))
-        response = self.llm(messages).content
+        response = self.llm.invoke(messages).content
         self.history.append(("wizard", user_message))
         self.history.append(("pop", response))
         return response
