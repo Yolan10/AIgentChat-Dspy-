@@ -19,6 +19,9 @@ class PopulationAgent:
         self.llm_settings = llm_settings
         self.state = "undecided"
         self.history: List[Tuple[str, str]] = []  # (speaker, text)
+        self.system_instruction = (
+            f"You are {self.name}. {self.personality_description}. Respond accordingly."
+        )
         self.llm = ChatOpenAI(
             model=llm_settings.get("model", config.LLM_MODEL),
             temperature=llm_settings.get("temperature", config.LLM_TEMPERATURE),
@@ -26,10 +29,7 @@ class PopulationAgent:
         )
 
     def respond_to(self, user_message: str) -> str:
-        system_prompt = (
-            f"You are {self.name}. {self.personality_description}. Respond accordingly."
-        )
-        messages = [SystemMessage(content=system_prompt)]
+        messages = [SystemMessage(content=self.system_instruction)]
         for speaker, text in self.history:
             if speaker == "wizard":
                 messages.append(HumanMessage(content=text))
@@ -47,6 +47,15 @@ class PopulationAgent:
             "agent_id": self.agent_id,
             "name": self.name,
             "personality_description": self.personality_description,
+        }
+
+    def get_spec(self) -> dict:
+        """Return a spec dictionary describing this population agent."""
+        return {
+            "name": self.name,
+            "personality_description": self.personality_description,
+            "system_instruction": self.system_instruction,
+            "llm_settings": self.llm_settings,
         }
 
     def reset_history(self) -> None:

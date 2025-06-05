@@ -47,6 +47,7 @@ class WizardAgent:
         log = {
             "wizard_id": self.wizard_id,
             "pop_agent_id": pop_agent.agent_id,
+            "pop_agent_spec": pop_agent.get_spec(),
             "goal": self.goal,
             "turns": [],
             "timestamp": utils.get_timestamp(),

@@ -27,3 +27,25 @@ The default LLM model is set to `gpt-4.1-nano`. Set `SHOW_LIVE_CONVERSATIONS = T
 `config.py` if you want each conversation turn printed to the terminal while the
 simulation runs.
 
+## Summary Output
+
+After running the simulation a `summary.json` file is written under `logs/`.
+Each entry contains the results for a population agent with the following
+fields:
+
+```json
+{
+  "pop_agent_id": "Pop_001",
+  "name": "Alice",
+  "personality_description": "eager shopper",
+  "system_instruction": "You are Alice. eager shopper. Respond accordingly.",
+  "temperature": 0.7,
+  "max_tokens": 512,
+  "success": true,
+  "score": 0.95
+}
+```
+
+`temperature` and `max_tokens` come from the agent's LLM settings and show which
+parameters were used during the conversation.
+
