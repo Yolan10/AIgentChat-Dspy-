@@ -10,6 +10,10 @@ import utils
 def main():
     god = GodAgent()
     population = god.spawn_population("Generate population", config.POPULATION_SIZE)
+    # log initial population specs before the wizard interacts with them
+    for agent in population:
+        utils.save_conversation_log(agent.get_spec(), f"{agent.agent_id}_spec.json")
+
     wizard = WizardAgent(wizard_id="Wizard_001")
     summary = []
     for pop_agent in population:

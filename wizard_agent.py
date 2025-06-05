@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 from typing import Dict, List
+import json
 
 from langchain_openai import ChatOpenAI
 from langchain_core.messages import AIMessage, HumanMessage, SystemMessage
@@ -41,6 +42,7 @@ class WizardAgent:
         self.current_prompt = utils.render_template(self.system_prompt_template, {"goal": self.goal})
         self.conversation_count = 0
         self.history_buffer: List[ConversationLog] = []
+        self.improvement_history: List[dict] = []
 
     def converse_with(self, pop_agent, show_live: bool = False) -> ConversationLog:
 
@@ -86,7 +88,23 @@ class WizardAgent:
     def self_improve(self) -> None:
         if dspy is None:
             return
-        # Example placeholder for Dspy improvement routine
-        new_prompt = self.current_prompt + "\n# improved"
+        logs_json = json.dumps(self.history_buffer)
+        template = utils.load_template(config.SELF_IMPROVE_PROMPT_TEMPLATE_PATH)
+        prompt = utils.render_template(template, {"logs": logs_json})
+        try:
+            new_prompt = dspy.improve_prompt(self.current_prompt, prompt,
+                                             iterations=config.DSPY_TRAINING_ITER,
+                                             lr=config.DSPY_LEARNING_RATE)
+        except Exception:
+            new_prompt = self.current_prompt + "\n# improved"
+
+        entry = {
+            "timestamp": utils.get_timestamp(),
+            "old_prompt": self.current_prompt,
+            "new_prompt": new_prompt,
+        }
+        filename = f"improve_{entry['timestamp'].replace(':', '').replace('-', '')}.json"
+        utils.save_conversation_log(entry, filename)
+        self.improvement_history.append(entry)
         self.current_prompt = new_prompt
         self.history_buffer.clear()

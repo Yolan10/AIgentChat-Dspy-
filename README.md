@@ -49,3 +49,14 @@ fields:
 `temperature` and `max_tokens` come from the agent's LLM settings and show which
 parameters were used during the conversation.
 
+## Prompt Improvement Logs
+
+The `WizardAgent` periodically refines its system prompt using Dspy. After
+every `SELF_IMPROVE_AFTER` conversations the recent logs are fed into the
+`self_improve_prompt.txt` template and sent to Dspy to generate a new prompt.
+Each improvement is recorded in `logs/` as `improve_<timestamp>.json` with the
+old and new prompts.
+
+Population agent specs are saved when the `GodAgent` spawns them. Look for files
+named `<agent_id>_spec.json` in the `logs/` directory.
+
