@@ -16,7 +16,8 @@ JUDGE_PROMPT_TEMPLATE_PATH = "templates/judge_prompt.txt"
 
 # LLM Hyperparameters
 # Default model to use for all LLM calls
-LLM_MODEL = "gpt-4.1-nano"
+# Updated model name for newer OpenAI releases
+LLM_MODEL = "gpt-4o"
 
 LLM_TEMPERATURE = 0.7
 LLM_MAX_TOKENS = 512
@@ -33,6 +34,10 @@ SHOW_LIVE_CONVERSATIONS = True
 # Dspy Settings
 DSPY_TRAINING_ITER = 1
 DSPY_LEARNING_RATE = 0.01
+# Maximum number of conversation logs kept in memory for self improvement
+HISTORY_BUFFER_LIMIT = 50
+# Maximum conversation history stored by each population agent
+POP_HISTORY_LIMIT = 50
 
 # Miscellaneous
 DEFAULT_TIMEZONE = "UTC"

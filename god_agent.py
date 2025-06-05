@@ -32,8 +32,12 @@ class GodAgent:
         prompt = utils.render_template(self.template, {"instruction": instruction_text, "n": n})
         messages = [SystemMessage(content=prompt), HumanMessage(content="Provide the JSON array only.")]
         response = self.llm.invoke(messages).content
-
-        personas = json.loads(response)
+        try:
+            personas = json.loads(response)
+        except json.JSONDecodeError:
+            personas = utils.extract_json_array(response)
+            if personas is None:
+                raise
         population = []
         for idx, spec in enumerate(personas):
             agent = PopulationAgent(
