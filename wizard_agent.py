@@ -10,6 +10,7 @@ from langchain_core.messages import AIMessage, HumanMessage, SystemMessage
 import config
 import utils
 from judge_agent import JudgeAgent
+from wizard_improver import build_dataset, train_improver
 
 # Dspy is imported as placeholder - this code assumes Dspy provides a simple API
 # to fine tune prompts. Replace with actual implementation when available.
@@ -84,9 +85,16 @@ class WizardAgent:
         return "buy" in text.lower()
 
     def self_improve(self) -> None:
-        if dspy is None:
+        """Train an improver on the conversation history."""
+        if dspy is None or not self.history_buffer:
             return
-        # Example placeholder for Dspy improvement routine
-        new_prompt = self.current_prompt + "\n# improved"
-        self.current_prompt = new_prompt
+
+        dataset = build_dataset(self.history_buffer)
+        improver, metrics = train_improver(dataset)
+
+        self.current_prompt = improver.agent.signature.instructions
+
+        log_path = f"improve_{utils.get_timestamp().replace(':', '').replace('-', '')}.json"
+        utils.save_conversation_log({"prompt": self.current_prompt, "metrics": metrics}, log_path)
+
         self.history_buffer.clear()
