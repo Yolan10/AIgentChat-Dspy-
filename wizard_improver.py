@@ -71,8 +71,27 @@ if dspy is not None:
             return base + bonus
 
         improver = WizardImprover()
-        optimizer = OptimizePrompts(metric=metric, num_candidates=4, auto=None, verbose=False)
-        trained = optimizer.compile(improver, trainset=dataset, num_trials=config.DSPY_TRAINING_ITER, provide_traceback=True)
+        if len(dataset) < config.DSPY_MINIBATCH_SIZE:
+            optimizer = dspy.COPRO(metric=metric)
+            trained = optimizer.compile(
+                improver,
+                trainset=dataset,
+                eval_kwargs={"provide_traceback": True},
+            )
+        else:
+            optimizer = OptimizePrompts(
+                metric=metric,
+                num_candidates=4,
+                auto=None,
+                verbose=False,
+            )
+            trained = optimizer.compile(
+                improver,
+                trainset=dataset,
+                num_trials=config.DSPY_TRAINING_ITER,
+                provide_traceback=True,
+                minibatch_size=config.DSPY_MINIBATCH_SIZE,
+            )
 
         best_score = max((c.get("score", 0) for c in getattr(trained, "candidate_programs", [])), default=0)
         metrics = {

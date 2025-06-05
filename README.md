@@ -30,6 +30,9 @@ Logs are saved under the `logs/` directory.
 The default LLM model is set to `gpt-4o`. Set `SHOW_LIVE_CONVERSATIONS = True` in
 `config.py` if you want each conversation turn printed to the terminal while the
 simulation runs.
+`DSPY_MINIBATCH_SIZE` controls the number of examples used per batch when the
+wizard optimizer trains on conversation history. If fewer examples are
+available, the system automatically falls back to `dspy.COPRO` for training.
 
 When a population agent is spawned its specification is immediately written to a
 log file (e.g. `Pop_001_spec_*.json`) so you can inspect it while the

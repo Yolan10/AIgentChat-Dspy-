@@ -34,6 +34,8 @@ SHOW_LIVE_CONVERSATIONS = True
 # Dspy Settings
 DSPY_TRAINING_ITER = 1
 DSPY_LEARNING_RATE = 0.01
+# Minimum number of examples per minibatch when training prompts
+DSPY_MINIBATCH_SIZE = 1
 # Maximum number of conversation logs kept in memory for self improvement
 HISTORY_BUFFER_LIMIT = 50
 # Maximum conversation history stored by each population agent
