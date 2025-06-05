@@ -76,6 +76,9 @@ class WizardAgent:
         result = judge.assess(log)
         log["judge_result"] = result
         self.history_buffer.append(log)
+        # ensure the history buffer does not grow without bound
+        if len(self.history_buffer) > config.HISTORY_BUFFER_LIMIT:
+            self.history_buffer = self.history_buffer[-config.HISTORY_BUFFER_LIMIT:]
         self.conversation_count += 1
         if self.conversation_count % config.SELF_IMPROVE_AFTER == 0:
             self.self_improve()

@@ -8,7 +8,7 @@ import utils
 
 try:
     import dspy
-    from dspy.teleprompt.copro_optimizer import COPRO as OptimizePrompts
+    from dspy.teleprompt.mipro_optimizer_v2 import MIPROv2 as OptimizePrompts
 except Exception:  # pragma: no cover - DSPy optional
     dspy = None
 
@@ -71,11 +71,14 @@ if dspy is not None:
             return base + bonus
 
         improver = WizardImprover()
-        optimizer = OptimizePrompts(metric=metric, depth=config.DSPY_TRAINING_ITER)
-        trained = optimizer.compile(improver, trainset=dataset, eval_kwargs={})
+        optimizer = OptimizePrompts(metric=metric, num_candidates=4, auto=None, verbose=False)
+        trained = optimizer.compile(improver, trainset=dataset, num_trials=config.DSPY_TRAINING_ITER, provide_traceback=True)
 
-        best_score = max((c["score"] for c in getattr(trained, "candidate_programs", [])), default=0)
-        metrics = {"best_score": best_score}
+        best_score = max((c.get("score", 0) for c in getattr(trained, "candidate_programs", [])), default=0)
+        metrics = {
+            "best_score": best_score,
+            "iterations": getattr(trained, "candidate_programs", []),
+        }
         return trained, metrics
 
 else:  # DSPy not available
