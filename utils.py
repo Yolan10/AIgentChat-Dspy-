@@ -33,3 +33,16 @@ def render_template(template_str: str, variables: dict) -> str:
     for key, val in variables.items():
         text = text.replace(f"{{{{{key}}}}}", str(val))
     return text
+
+
+def extract_json_array(text: str):
+    """Return the first JSON array found in the provided text."""
+    import re
+
+    match = re.search(r"\[[^\[]*\]", text, re.DOTALL)
+    if not match:
+        return None
+    try:
+        return json.loads(match.group(0))
+    except Exception:
+        return None
