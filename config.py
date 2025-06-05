@@ -17,6 +17,7 @@ JUDGE_PROMPT_TEMPLATE_PATH = "templates/judge_prompt.txt"
 # LLM Hyperparameters
 # Default model to use for all LLM calls
 LLM_MODEL = "gpt-4.1-nano"
+
 LLM_TEMPERATURE = 0.7
 LLM_MAX_TOKENS = 512
 LLM_TOP_P = 0.9
@@ -27,7 +28,7 @@ JSON_INDENT = 2
 
 # Runtime Options
 # Set to True to print conversation turns to the terminal while running
-SHOW_LIVE_CONVERSATIONS = False
+SHOW_LIVE_CONVERSATIONS = True
 
 # Dspy Settings
 DSPY_TRAINING_ITER = 1

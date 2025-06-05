@@ -7,6 +7,7 @@ from typing import List
 from langchain_openai import ChatOpenAI
 from langchain_core.messages import HumanMessage, SystemMessage
 
+
 import config
 import utils
 from population_agent import PopulationAgent
@@ -31,6 +32,7 @@ class GodAgent:
         prompt = utils.render_template(self.template, {"instruction": instruction_text, "n": n})
         messages = [SystemMessage(content=prompt), HumanMessage(content="Provide the JSON array only.")]
         response = self.llm.invoke(messages).content
+
         personas = json.loads(response)
         population = []
         for idx, spec in enumerate(personas):

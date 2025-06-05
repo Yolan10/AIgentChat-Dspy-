@@ -7,6 +7,7 @@ import json
 from langchain_openai import ChatOpenAI
 from langchain_core.messages import HumanMessage, SystemMessage
 
+
 import config
 import utils
 
@@ -29,5 +30,6 @@ class JudgeAgent:
         transcript = "\n".join([f"{t['speaker']}: {t['text']}" for t in log["turns"]])
         prompt = utils.render_template(self.template, {"goal": log.get("goal"), "transcript": transcript})
         messages = [SystemMessage(content=prompt), HumanMessage(content="Return JSON with success, score, rationale.")]
+
         result = self.llm.invoke(messages).content
         return json.loads(result)

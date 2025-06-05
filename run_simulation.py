@@ -14,6 +14,7 @@ def main():
     summary = []
     for pop_agent in population:
         log = wizard.converse_with(pop_agent, show_live=config.SHOW_LIVE_CONVERSATIONS)
+
         filename = f"{wizard.wizard_id}_{pop_agent.agent_id}_{utils.get_timestamp().replace(':', '').replace('-', '')}.json"
         utils.save_conversation_log(log, filename)
         summary.append({
