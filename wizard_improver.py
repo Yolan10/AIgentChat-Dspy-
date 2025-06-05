@@ -41,11 +41,14 @@ if dspy is not None:
             transcript = "\n".join(f"{t['speaker']}: {t['text']}" for t in log.get('turns', []))
             judge = log.get("judge_result", {})
             score = judge.get("score", 0)
-            ex = dspy.Example(
-                logs=f"{transcript}\nRESULT: {judge}",
-                goal=log.get("goal"),
-                score=score,
-            ).with_inputs("logs", "goal").with_outputs("score")
+            ex = (
+                dspy.Example(
+                    logs=f"{transcript}\nRESULT: {judge}",
+                    goal=log.get("goal"),
+                    score=score,
+                )
+                .with_inputs("logs", "goal")
+            )
             dataset.append(ex)
         return dataset
 
