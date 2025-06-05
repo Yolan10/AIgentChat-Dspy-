@@ -56,6 +56,15 @@ if dspy is not None:
     def train_improver(dataset: List[dspy.Example]) -> tuple[WizardImprover, dict]:
         """Train a WizardImprover on the dataset."""
 
+        if dspy.settings.lm is None:
+            dspy.settings.configure(
+                lm=dspy.LM(
+                    model=config.LLM_MODEL,
+                    temperature=config.LLM_TEMPERATURE,
+                    max_tokens=config.LLM_MAX_TOKENS,
+                )
+            )
+
         def metric(example: dspy.Example, pred: dspy.Prediction) -> float:
             base = example.score or 0
             bonus = 1.0 if "buy" in pred.improved_prompt.lower() else 0.0

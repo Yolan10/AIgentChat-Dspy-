@@ -16,6 +16,10 @@ Simple chat simulation using LangChain and Dspy.
    export OPENAI_API_KEY=YOUR_KEY
    ```
 
+   DSPy's optimizers require a configured language model. If you do not
+   configure `dspy.settings` yourself, the code will initialize a default
+   `dspy.LM` using the values in `config.py` and your OpenAI key.
+
 3. Run the simulation:
 
    ```bash
