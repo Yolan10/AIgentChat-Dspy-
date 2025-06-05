@@ -16,7 +16,11 @@ from judge_agent import JudgeAgent
 try:
     import dspy
 except ImportError:  # pragma: no cover - dspy not installed
-    dspy = None
+    def converse_with(self, pop_agent, show_live: bool = False) -> ConversationLog:
+            if show_live:
+                print(f"Wizard: {wizard_msg}")
+            if show_live:
+                print(f"{pop_agent.name}: {pop_reply}")
 
 
 class ConversationLog(dict):

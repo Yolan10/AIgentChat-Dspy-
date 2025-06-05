@@ -23,3 +23,7 @@ Simple chat simulation using LangChain and Dspy.
    ```
 
 Logs are saved under the `logs/` directory.
+
+The default LLM model is set to `gpt-4.1-nano`. Set `SHOW_LIVE_CONVERSATIONS = True` in
+`config.py` if you want each conversation turn printed to the terminal while the
+simulation runs.
