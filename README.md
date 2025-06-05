@@ -27,6 +27,11 @@ The default LLM model is set to `gpt-4.1-nano`. Set `SHOW_LIVE_CONVERSATIONS = T
 `config.py` if you want each conversation turn printed to the terminal while the
 simulation runs.
 
+When a population agent is spawned its specification is immediately written to a
+log file (e.g. `Pop_001_spec_*.json`) so you can inspect it while the
+simulation continues. Prompt improvements made by the wizard are also logged in
+real time with filenames beginning with `improve_`.
+
 ## Summary Output
 
 After running the simulation a `summary.json` file is written under `logs/`.

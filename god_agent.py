@@ -43,4 +43,10 @@ class GodAgent:
                 llm_settings=self.llm_settings,
             )
             population.append(agent)
+
+            # Save the agent specification immediately so users can inspect it
+            log_filename = f"{agent.agent_id}_spec_{utils.get_timestamp().replace(':', '').replace('-', '')}.json"
+            utils.save_conversation_log(agent.get_spec(), log_filename)
+            print(f"Created {agent.agent_id} -> {log_filename}")
+
         return population
