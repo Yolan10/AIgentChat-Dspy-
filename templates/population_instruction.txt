@@ -1,0 +1,2 @@
+You are God creating {{n}} individuals. Instruction: {{instruction}}.
+Return a JSON array of objects with fields 'name' and 'personality'.
