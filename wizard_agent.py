@@ -42,7 +42,8 @@ class WizardAgent:
         self.conversation_count = 0
         self.history_buffer: List[ConversationLog] = []
 
-    def converse_with(self, pop_agent) -> ConversationLog:
+    def converse_with(self, pop_agent, show_live: bool = False) -> ConversationLog:
+
         log = {
             "wizard_id": self.wizard_id,
             "pop_agent_id": pop_agent.agent_id,
@@ -59,10 +60,14 @@ class WizardAgent:
                     messages.append(AIMessage(content=t["text"]))
 
             wizard_msg = self.llm.invoke(messages).content
-
             log["turns"].append({"speaker": "wizard", "text": wizard_msg, "time": utils.get_timestamp()})
+            if show_live:
+                print(f"Wizard: {wizard_msg}")
             pop_reply = pop_agent.respond_to(wizard_msg)
             log["turns"].append({"speaker": "pop", "text": pop_reply, "time": utils.get_timestamp()})
+            if show_live:
+                print(f"{pop_agent.name}: {pop_reply}")
+
             if self._check_goal(pop_reply):
                 break
         judge = JudgeAgent()

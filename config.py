@@ -15,7 +15,9 @@ SELF_IMPROVE_PROMPT_TEMPLATE_PATH = "templates/self_improve_prompt.txt"
 JUDGE_PROMPT_TEMPLATE_PATH = "templates/judge_prompt.txt"
 
 # LLM Hyperparameters
-LLM_MODEL = "gpt-4"
+# Default model to use for all LLM calls
+LLM_MODEL = "gpt-4.1-nano"
+
 LLM_TEMPERATURE = 0.7
 LLM_MAX_TOKENS = 512
 LLM_TOP_P = 0.9
@@ -23,6 +25,10 @@ LLM_TOP_P = 0.9
 # File/Logging Settings
 LOGS_DIRECTORY = "logs"
 JSON_INDENT = 2
+
+# Runtime Options
+# Set to True to print conversation turns to the terminal while running
+SHOW_LIVE_CONVERSATIONS = True
 
 # Dspy Settings
 DSPY_TRAINING_ITER = 1

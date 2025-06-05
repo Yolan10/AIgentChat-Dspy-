@@ -3,6 +3,7 @@ from __future__ import annotations
 
 from typing import Dict
 
+import json
 from langchain_openai import ChatOpenAI
 from langchain_core.messages import HumanMessage, SystemMessage
 

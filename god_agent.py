@@ -31,7 +31,6 @@ class GodAgent:
         n = n or config.POPULATION_SIZE
         prompt = utils.render_template(self.template, {"instruction": instruction_text, "n": n})
         messages = [SystemMessage(content=prompt), HumanMessage(content="Provide the JSON array only.")]
-        
         response = self.llm.invoke(messages).content
 
         personas = json.loads(response)
