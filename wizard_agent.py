@@ -55,6 +55,7 @@ class WizardAgent:
             "pop_agent_id": pop_agent.agent_id,
             "pop_agent_spec": pop_agent.get_spec(),
             "goal": self.goal,
+            "prompt": self.current_prompt,
             "turns": [],
             "timestamp": utils.get_timestamp(),
         }
@@ -94,7 +95,7 @@ class WizardAgent:
 
     def self_improve(self) -> None:
         """Train an improver on the conversation history."""
-        if dspy is None or not self.history_buffer:
+        if dspy is None:
             return
 
         dataset = build_dataset(self.history_buffer)
