@@ -8,6 +8,12 @@ POPULATION_INSTRUCTION_TEMPLATE_PATH = "templates/population_instruction.txt"
 WIZARD_DEFAULT_GOAL = "Convince population to buy"
 WIZARD_PROMPT_TEMPLATE_PATH = "templates/wizard_prompt.txt"
 MAX_TURNS = 20
+# Trigger the wizard's self-improvement step. Provide an ``int`` to run the
+# improver every ``n`` conversations or a sequence of ints to trigger on
+# specific conversation counts.  For example::
+#
+#     SELF_IMPROVE_AFTER = [1, 10, 15]  # improve after conversations 1, 10 and 15
+#     SELF_IMPROVE_AFTER = 10           # improve after 10, 20, 30, ...
 SELF_IMPROVE_AFTER = 10
 SELF_IMPROVE_PROMPT_TEMPLATE_PATH = "templates/self_improve_prompt.txt"
 

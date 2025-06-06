@@ -86,12 +86,25 @@ class WizardAgent:
         if len(self.history_buffer) > config.HISTORY_BUFFER_LIMIT:
             self.history_buffer = self.history_buffer[-config.HISTORY_BUFFER_LIMIT:]
         self.conversation_count += 1
-        if self.conversation_count % config.SELF_IMPROVE_AFTER == 0:
+        if self._should_self_improve():
             self.self_improve()
         return log
 
     def _check_goal(self, text: str) -> bool:
         return "buy" in text.lower()
+
+    def _should_self_improve(self) -> bool:
+        """Determine whether to run the improver based on the schedule."""
+        schedule = config.SELF_IMPROVE_AFTER
+        if isinstance(schedule, int):
+            return schedule > 0 and self.conversation_count % schedule == 0
+        if isinstance(schedule, str):
+            schedule = [s for s in schedule.split(";") if s.strip()]
+        try:
+            points = {int(x) for x in schedule}
+        except TypeError:
+            return False
+        return self.conversation_count in points
 
     def self_improve(self) -> None:
         """Train an improver on the conversation history."""
