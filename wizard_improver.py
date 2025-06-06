@@ -138,13 +138,21 @@ if dspy is not None:
                 auto=None,
                 verbose=False,
             )
-            method = "MIPROv2"
+            # DSPy derives the validation set as 80% of the trainset. When the
+            # dataset is small this can make the validation size smaller than
+            # ``DSPY_MIPRO_MINIBATCH_SIZE`` which causes ``compile`` to raise a
+            # ``ValueError``. Estimate the resulting validation size and cap the
+            # minibatch accordingly so it never exceeds the validation set size.
+            valset_size = int(len(dataset) * 0.8)
+            minibatch = min(config.DSPY_MIPRO_MINIBATCH_SIZE, valset_size)
+
+
             trained = optimizer.compile(
                 improver,
                 trainset=dataset,
                 num_trials=config.DSPY_TRAINING_ITER,
                 provide_traceback=True,
-                minibatch_size=config.DSPY_MIPRO_MINIBATCH_SIZE,
+                minibatch_size=minibatch,
             )
 
         candidates = getattr(trained, "candidate_programs", [])
