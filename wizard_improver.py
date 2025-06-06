@@ -121,7 +121,7 @@ if dspy is not None:
                 trainset=dataset,
                 eval_kwargs={"provide_traceback": True},
             )
-        elif len(dataset) < config.DSPY_MINIBATCH_SIZE:
+        elif len(dataset) < max(2, config.DSPY_MINIBATCH_SIZE):
             optimizer = dspy.teleprompt.BootstrapFewShot(metric=metric)
             trained = optimizer.compile(
                 improver,

@@ -34,8 +34,9 @@ simulation runs.
 wizard optimizer trains on conversation history.
 When no history is available the wizard still runs `dspy.COPRO` with an empty
 dataset. With only a few examples it uses `BootstrapFewShot` to augment the
-data before training. Once enough examples are collected (>=
-`DSPY_MINIBATCH_SIZE`), it switches to MIPROv2 (`OptimizePrompts`).
+data before training. Once at least two examples are collected and the
+dataset reaches `DSPY_MINIBATCH_SIZE`, it switches to MIPROv2
+(`OptimizePrompts`).
 
 Each conversation log now records the wizard's system instruction. The
 optimization dataset therefore pairs that instruction with the conversation
