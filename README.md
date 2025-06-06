@@ -39,8 +39,9 @@ log file (e.g. `1.1_<timestamp>_spec_*.json`) so you can inspect it while the
 simulation continues. Prompt improvements made by the wizard are also logged in
 real time with filenames beginning with `improve_`.
 
-Each improved prompt is additionally appended to `logs/improved_prompts.txt`
-with the run number and timestamp. Entries are prefixed with
+Each invocation of `IntegratedSystem.run` increments `logs/run_counter.txt`, which
+persists the latest run number between executions. Population agents are labelled
+as `<run>.<index>_<timestamp>` (e.g. `2.1_20240101T120000Z`).
 `instructions=` and long prompts are wrapped every 100 characters for
 readability.
 
