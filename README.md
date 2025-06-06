@@ -31,8 +31,16 @@ The default LLM model is set to `gpt-4o`. Set `SHOW_LIVE_CONVERSATIONS = True` i
 `config.py` if you want each conversation turn printed to the terminal while the
 simulation runs.
 `DSPY_MINIBATCH_SIZE` controls the number of examples used per batch when the
-wizard optimizer trains on conversation history. If fewer examples are
-available, the system automatically falls back to `dspy.COPRO` for training.
+wizard optimizer trains on conversation history.
+When no history is available the wizard still runs `dspy.COPRO` with an empty
+dataset. With only a few examples it uses `BootstrapFewShot` to augment the
+data before training. Once enough examples are collected (>=
+`DSPY_MINIBATCH_SIZE`), it switches to MIPROv2 (`OptimizePrompts`).
+
+Each conversation log now records the wizard's system instruction. The
+optimization dataset therefore pairs that instruction with the conversation
+transcript and the judge's score so the teleprompters can learn which prompts
+lead to better outcomes.
 
 When a population agent is spawned its specification is immediately written to a
 log file (e.g. `1.1_<timestamp>_spec_*.json`) so you can inspect it while the
