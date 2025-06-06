@@ -27,7 +27,13 @@ class GodAgent:
         )
         self.template = utils.load_template(config.POPULATION_INSTRUCTION_TEMPLATE_PATH)
 
-    def spawn_population(self, instruction_text: str, n: int | None = None) -> List[PopulationAgent]:
+    def spawn_population(
+        self,
+        instruction_text: str,
+        n: int | None = None,
+        run_no: int = 0,
+        start_index: int = 1,
+    ) -> List[PopulationAgent]:
         n = n or config.POPULATION_SIZE
         prompt = utils.render_template(self.template, {"instruction": instruction_text, "n": n})
         messages = [SystemMessage(content=prompt), HumanMessage(content="Provide the JSON array only.")]
@@ -39,9 +45,9 @@ class GodAgent:
             if personas is None:
                 raise
         population = []
-        for idx, spec in enumerate(personas):
+        for idx, spec in enumerate(personas, start=start_index):
             agent = PopulationAgent(
-                agent_id=f"Pop_{idx+1:03d}",
+                agent_id=utils.format_agent_id(run_no, idx),
                 name=spec.get("name"),
                 personality_description=spec.get("personality"),
                 llm_settings=self.llm_settings,
