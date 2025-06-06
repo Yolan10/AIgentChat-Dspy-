@@ -2,7 +2,6 @@
 from __future__ import annotations
 
 from typing import Any, List
-import re
 
 import config
 import utils
@@ -57,6 +56,7 @@ if dspy is not None:
         match = re.search(
             r"instructions=(\"\"\".*?\"\"\"|\".*?\"|'.*?')",
             text,
+
             re.DOTALL,
         )
         if not match:
