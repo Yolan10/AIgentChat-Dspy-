@@ -110,7 +110,17 @@ if dspy is not None:
                 )
             )
 
-        def metric(example: dspy.Example, pred: dspy.Prediction) -> float:
+        def metric(
+            example: dspy.Example, pred: dspy.Prediction, trace: object | None = None
+        ) -> float:
+            """Score an improved prompt.
+
+            ``BootstrapFewShot`` and other teleprompters call ``metric`` with
+            ``example``, ``prediction`` and a ``trace`` object. The ``trace`` is
+            optional for this implementation so we default it to ``None`` in
+            order to remain compatible with optimizers that supply it.
+            """
+
             base = example.score or 0
             bonus = 1.0 if "buy" in pred.improved_prompt.lower() else 0.0
             return base + bonus
