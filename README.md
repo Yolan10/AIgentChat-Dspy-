@@ -30,6 +30,10 @@ Logs are saved under the `logs/` directory.
 The default LLM model is set to `gpt-4o`. Set `SHOW_LIVE_CONVERSATIONS = True` in
 `config.py` if you want each conversation turn printed to the terminal while the
 simulation runs.
+`SELF_IMPROVE_AFTER` controls when the wizard optimizes its prompt. Provide a
+single integer to run the improver every *n* conversations or a list of counts
+like `[1, 10, 15]` (or the string `"1;10;15"`) to trigger improvements only at
+those points.
 `DSPY_COPRO_MINIBATCH_SIZE`, `DSPY_BOOTSRAP_MINIBATCH_SIZE`, and
 `DSPY_MIPRO_MINIBATCH_SIZE` control how many conversation logs trigger each DSPy
 optimizer.
