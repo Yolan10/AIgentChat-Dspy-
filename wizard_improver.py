@@ -19,6 +19,7 @@ if dspy is not None:
     class ImproveSignature(dspy.Signature):
         """Signature for generating a better system prompt."""
 
+        instruction: str = dspy.InputField()
         logs: str = dspy.InputField()
         goal: str = dspy.InputField()
         improved_prompt: str = dspy.OutputField()
@@ -31,8 +32,8 @@ if dspy is not None:
             super().__init__()
             self.agent = dspy.ReAct(ImproveSignature, tools=[])
 
-        def forward(self, logs: str, goal: str) -> dspy.Prediction:
-            return self.agent(logs=logs, goal=goal)
+        def forward(self, instruction: str, logs: str, goal: str) -> dspy.Prediction:
+            return self.agent(instruction=instruction, logs=logs, goal=goal)
 
 
     def _extract_instructions(program: object) -> str:
@@ -81,11 +82,12 @@ if dspy is not None:
             score = judge.get("score", 0)
             ex = (
                 dspy.Example(
+                    instruction=log.get("prompt", ""),
                     logs=f"{transcript}\nRESULT: {judge}",
                     goal=log.get("goal"),
                     score=score,
                 )
-                .with_inputs("logs", "goal")
+                .with_inputs("instruction", "logs", "goal")
             )
             dataset.append(ex)
         return dataset
@@ -109,12 +111,18 @@ if dspy is not None:
             return base + bonus
 
         improver = WizardImprover()
-        if len(dataset) < config.DSPY_MINIBATCH_SIZE:
+        if len(dataset) == 0:
             optimizer = dspy.COPRO(metric=metric)
             trained = optimizer.compile(
                 improver,
                 trainset=dataset,
                 eval_kwargs={"provide_traceback": True},
+            )
+        elif len(dataset) < config.DSPY_MINIBATCH_SIZE:
+            optimizer = dspy.teleprompt.BootstrapFewShot(metric=metric)
+            trained = optimizer.compile(
+                improver,
+                trainset=dataset,
             )
         else:
             optimizer = OptimizePrompts(
@@ -132,11 +140,13 @@ if dspy is not None:
             )
 
         candidates = getattr(trained, "candidate_programs", [])
-        best_score = max((c.get("score", 0) for c in candidates), default=0)
-        best_prompt = ""
         if candidates:
             best = max(candidates, key=lambda c: c.get("score", 0))
             best_prompt = _extract_instructions(best.get("program", ""))
+            best_score = best.get("score", 0)
+        else:
+            best_prompt = _extract_instructions(trained)
+            best_score = 0
         metrics = {
             "best_score": best_score,
             "iterations": candidates,
