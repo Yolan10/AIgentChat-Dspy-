@@ -35,8 +35,26 @@ if dspy is not None:
             return self.agent(logs=logs, goal=goal)
 
 
-    def _extract_instructions(program: str) -> str:
-        """Return the instructions string from a candidate program."""
+    def _extract_instructions(program: object) -> str:
+        """Return the instructions string from a candidate program.
+
+        ``program`` may be a raw source string or a compiled ``dspy`` module.
+        When a module is provided we attempt to read the ``signature.instructions``
+        attribute, falling back to regex extraction from the string
+        representation of ``program``.
+        """
+
+        # If ``program`` is a compiled module, try grabbing the instructions
+        sig = getattr(program, "signature", None)
+        if sig is not None and hasattr(sig, "instructions"):
+            text = sig.instructions
+            if isinstance(text, str):
+                return text.strip()
+
+        # Otherwise handle the value as a plain string
+        if not isinstance(program, str):
+            program = str(program)
+
         match = re.search(
             r"instructions=(\"\"\".*?\"\"\"|\".*?\"|'.*?')",
             program,
