@@ -34,7 +34,8 @@ if dspy is not None:
         def forward(self, logs: str, goal: str) -> dspy.Prediction:
             return self.agent(logs=logs, goal=goal)
 
-       def _extract_instructions(program: object) -> str:
+
+    def _extract_instructions(program: object) -> str:
         """Return the instructions string from a candidate program.
 
         ``program`` may be a raw source string or a compiled ``dspy`` module.
@@ -53,8 +54,7 @@ if dspy is not None:
         # Otherwise handle the value as a plain string
         if not isinstance(program, str):
             program = str(program)
-    
-    
+
         match = re.search(
             r"instructions=(\"\"\".*?\"\"\"|\".*?\"|'.*?')",
             program,
