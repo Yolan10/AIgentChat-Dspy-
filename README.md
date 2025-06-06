@@ -30,12 +30,15 @@ Logs are saved under the `logs/` directory.
 The default LLM model is set to `gpt-4o`. Set `SHOW_LIVE_CONVERSATIONS = True` in
 `config.py` if you want each conversation turn printed to the terminal while the
 simulation runs.
-`DSPY_MINIBATCH_SIZE` controls the number of examples used per batch when the
-wizard optimizer trains on conversation history.
-When no history is available the wizard still runs `dspy.COPRO` with an empty
-dataset. With only a few examples it uses `BootstrapFewShot` to augment the
-data before training. Once enough examples are collected (>=
-`DSPY_MINIBATCH_SIZE`), it switches to MIPROv2 (`OptimizePrompts`).
+`DSPY_COPRO_MINIBATCH_SIZE`, `DSPY_BOOTSRAP_MINIBATCH_SIZE`, and
+`DSPY_MIPRO_MINIBATCH_SIZE` control how many conversation logs trigger each DSPy
+optimizer.
+When the history contains at most `DSPY_COPRO_MINIBATCH_SIZE` examples the
+wizard runs `dspy.COPRO` with an empty dataset. With only a few examples
+(fewer than `DSPY_BOOTSRAP_MINIBATCH_SIZE`) it uses `BootstrapFewShot` to
+augment the data. Once at least `DSPY_BOOTSRAP_MINIBATCH_SIZE` examples are
+available it trains using MIPROv2 (`OptimizePrompts`) with a minibatch size of
+`DSPY_MIPRO_MINIBATCH_SIZE`.
 
 Each conversation log now records the wizard's system instruction. The
 optimization dataset therefore pairs that instruction with the conversation
