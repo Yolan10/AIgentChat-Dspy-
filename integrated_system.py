@@ -25,6 +25,7 @@ class IntegratedSystem:
         run_no = utils.increment_run_number()
         self.wizard.set_run(run_no)
 
+        
         self.logger.log_event("system_start", instruction=instruction, n=n, run_no=run_no)
         specs = self.generator.generate(instruction, n)
         population: List = []
@@ -33,6 +34,7 @@ class IntegratedSystem:
                 spec.get("personality"), 1, run_no, idx + 1
             )[0]
 
+            
             population.append(agent)
 
         summary: List[dict] = []

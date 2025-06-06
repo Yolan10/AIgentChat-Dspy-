@@ -46,13 +46,27 @@ def format_agent_id(run_no: int, index: int) -> str:
     return f"{run_no}.{index}_{ts}"
 
 
+
+ def _wrap_text(text: str, width: int = 100) -> str:
+    """Return text wrapped with newline every `width` characters."""
+    lines = []
+    for line in text.splitlines():
+        while len(line) > width:
+            lines.append(line[:width])
+            line = line[width:]
+        lines.append(line)
+    return "\n".join(lines)
+
+
 def append_improvement_log(run_no: int, prompt: str) -> None:
-    """Append a single line entry of the improved prompt to a text log."""
+    """Append the improved prompt to a persistent text log."""
     ensure_logs_dir()
     path = os.path.join(config.LOGS_DIRECTORY, "improved_prompts.txt")
     ts = get_timestamp()
+    wrapped = _wrap_text(prompt, 100)
     with open(path, "a", encoding="utf-8") as fh:
-        fh.write(f"{ts} run={run_no} prompt={prompt}\n")
+        fh.write(f"{ts} run={run_no} instructions=\"{wrapped}\"\n")
+
 
 
 def save_conversation_log(log_obj: dict, filename: str) -> None:
