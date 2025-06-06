@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 from typing import List
+import re
 
 import config
 import utils
@@ -32,6 +33,25 @@ if dspy is not None:
 
         def forward(self, logs: str, goal: str) -> dspy.Prediction:
             return self.agent(logs=logs, goal=goal)
+
+
+    def _extract_instructions(program: str) -> str:
+        """Return the instructions string from a candidate program."""
+        match = re.search(
+            r"instructions=(\"\"\".*?\"\"\"|\".*?\"|'.*?')",
+            program,
+            re.DOTALL,
+        )
+        if not match:
+            return ""
+        text = match.group(1)
+        if text.startswith('"""') and text.endswith('"""'):
+            return text[3:-3].strip()
+        if text.startswith('"') and text.endswith('"'):
+            return text[1:-1].strip()
+        if text.startswith("'") and text.endswith("'"):
+            return text[1:-1].strip()
+        return text.strip()
 
 
     def build_dataset(history: List[dict]) -> List[dspy.Example]:
@@ -93,10 +113,16 @@ if dspy is not None:
                 minibatch_size=config.DSPY_MINIBATCH_SIZE,
             )
 
-        best_score = max((c.get("score", 0) for c in getattr(trained, "candidate_programs", [])), default=0)
+        candidates = getattr(trained, "candidate_programs", [])
+        best_score = max((c.get("score", 0) for c in candidates), default=0)
+        best_prompt = ""
+        if candidates:
+            best = max(candidates, key=lambda c: c.get("score", 0))
+            best_prompt = _extract_instructions(best.get("program", ""))
         metrics = {
             "best_score": best_score,
-            "iterations": getattr(trained, "candidate_programs", []),
+            "iterations": candidates,
+            "best_prompt": best_prompt,
         }
         return trained, metrics
 
