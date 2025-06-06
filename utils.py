@@ -60,7 +60,9 @@ def save_conversation_log(log_obj: dict, filename: str) -> None:
     ensure_logs_dir()
     path = os.path.join(config.LOGS_DIRECTORY, filename)
     with open(path, "w", encoding="utf-8") as f:
-        json.dump(log_obj, f, indent=config.JSON_INDENT)
+        # Use default=str so any non-serializable objects are converted to
+        # strings rather than raising an exception.
+        json.dump(log_obj, f, indent=config.JSON_INDENT, default=str)
 
 
 def load_template(path: str) -> str:

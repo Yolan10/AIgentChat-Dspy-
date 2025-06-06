@@ -34,6 +34,7 @@ class GodAgent:
         run_no: int = 0,
         start_index: int = 1,
     ) -> List[PopulationAgent]:
+
         n = n or config.POPULATION_SIZE
         prompt = utils.render_template(self.template, {"instruction": instruction_text, "n": n})
         messages = [SystemMessage(content=prompt), HumanMessage(content="Provide the JSON array only.")]
@@ -48,6 +49,7 @@ class GodAgent:
         for idx, spec in enumerate(personas, start=start_index):
             agent = PopulationAgent(
                 agent_id=utils.format_agent_id(run_no, idx),
+
                 name=spec.get("name"),
                 personality_description=spec.get("personality"),
                 llm_settings=self.llm_settings,

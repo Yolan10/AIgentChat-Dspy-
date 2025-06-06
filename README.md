@@ -46,6 +46,9 @@ agents are labelled using `<run>.<index>_<timestamp>` (e.g. `2.1_20240101T120000
 The index increases sequentially for each population agent created during a run
 (`1.1`, `1.2`, ...).
 
+Each invocation of `IntegratedSystem.run` increments `logs/run_counter.txt` and
+agents are labelled using `<run>.<index>_<timestamp>` (e.g. `2.1_20240101T120000Z`).
+
 ## Summary Output
 
 After running the simulation a `summary_<run>.json` file is written under `logs/`.
