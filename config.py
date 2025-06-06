@@ -17,7 +17,7 @@ JUDGE_PROMPT_TEMPLATE_PATH = "templates/judge_prompt.txt"
 # LLM Hyperparameters
 # Default model to use for all LLM calls
 # Updated model name for newer OpenAI releases
-LLM_MODEL = "gpt-4o"
+LLM_MODEL = "gpt-4.1-nano"
 
 LLM_TEMPERATURE = 0.7
 LLM_MAX_TOKENS = 512
