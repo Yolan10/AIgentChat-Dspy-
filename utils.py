@@ -47,7 +47,7 @@ def format_agent_id(run_no: int, index: int) -> str:
 
 
 
-def _wrap_text(text: str, width: int = 100) -> str:
+def _wrap_text(text: str, width: int = 150) -> str:
     """Return text wrapped with newline every `width` characters."""
     lines = []
     for line in text.splitlines():
@@ -63,7 +63,7 @@ def append_improvement_log(run_no: int, prompt: str) -> None:
     ensure_logs_dir()
     path = os.path.join(config.LOGS_DIRECTORY, "improved_prompts.txt")
     ts = get_timestamp()
-    wrapped = _wrap_text(prompt, 100)
+    wrapped = _wrap_text(prompt, 150)
     with open(path, "a", encoding="utf-8") as fh:
         fh.write(f"{ts} run={run_no} instructions=\"{wrapped}\"\n")
 
