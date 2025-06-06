@@ -46,7 +46,7 @@ def format_agent_id(run_no: int, index: int) -> str:
     return f"{run_no}.{index}_{ts}"
 
 
-def _wrap_text(text: str, width: int = 100) -> str:
+
     """Return text wrapped with newline every `width` characters."""
     lines = []
     for line in text.splitlines():
@@ -72,7 +72,9 @@ def save_conversation_log(log_obj: dict, filename: str) -> None:
     ensure_logs_dir()
     path = os.path.join(config.LOGS_DIRECTORY, filename)
     with open(path, "w", encoding="utf-8") as f:
-        json.dump(log_obj, f, indent=config.JSON_INDENT)
+        # Use default=str so any non-serializable objects are converted to
+        # strings rather than raising an exception.
+        json.dump(log_obj, f, indent=config.JSON_INDENT, default=str)
 
 
 

@@ -49,6 +49,19 @@ as `<run>.<index>_<timestamp>` (e.g. `2.1_20240101T120000Z`).
 The index increases sequentially for each population agent created during a run
 (`1.1`, `1.2`, ...).
 
+Each improved prompt is additionally appended to `logs/improved_prompts.txt`
+with the run number and timestamp. Entries are prefixed with
+`instructions=` and long prompts are wrapped every 100 characters for
+readability.
+
+
+
+Each invocation of `IntegratedSystem.run` increments `logs/run_counter.txt` and
+agents are labelled using `<run>.<index>_<timestamp>` (e.g. `2.1_20240101T120000Z`).
+The index increases sequentially for each population agent created during a run
+(`1.1`, `1.2`, ...).
+
+
 ## Summary Output
 
 After running the simulation a `summary_<run>.json` file is written under `logs/`.
