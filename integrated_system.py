@@ -22,11 +22,15 @@ class IntegratedSystem:
         self.wizard = WizardAgent(wizard_id="Wizard_001")
 
     def run(self, instruction: str, n: int) -> None:
-        self.logger.log_event("system_start", instruction=instruction, n=n)
+        run_no = utils.increment_run_number()
+        self.wizard.set_run(run_no)
+        self.logger.log_event("system_start", instruction=instruction, n=n, run_no=run_no)
         specs = self.generator.generate(instruction, n)
         population: List = []
         for idx, spec in enumerate(specs):
-            agent = self.god.spawn_population(spec.get("personality"), 1)[0]
+            agent = self.god.spawn_population(
+                spec.get("personality"), 1, run_no, idx + 1
+            )[0]
             population.append(agent)
 
         summary: List[dict] = []
@@ -50,8 +54,9 @@ class IntegratedSystem:
                 "conversation_end",
                 pop_agent=pop.agent_id,
                 success=entry["success"],
+                run_no=run_no,
             )
 
-        utils.save_conversation_log(summary, "summary.json")
-        self.logger.log_event("system_end")
+        utils.save_conversation_log(summary, f"summary_{run_no}.json")
+        self.logger.log_event("system_end", run_no=run_no)
         print(f"Completed {len(population)} conversations.")
