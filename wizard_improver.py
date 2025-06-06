@@ -118,6 +118,7 @@ if dspy is not None:
         improver = WizardImprover()
         if len(dataset) <= config.DSPY_COPRO_MINIBATCH_SIZE:
             optimizer = dspy.COPRO(metric=metric)
+            method = "COPRO"
             trained = optimizer.compile(
                 improver,
                 trainset=dataset,
@@ -125,6 +126,7 @@ if dspy is not None:
             )
         elif len(dataset) < config.DSPY_MIPRO_MINIBATCH_SIZE:
             optimizer = dspy.teleprompt.BootstrapFewShot(metric=metric)
+            method = "BootstrapFewShot"
             trained = optimizer.compile(
                 improver,
                 trainset=dataset,
@@ -136,6 +138,7 @@ if dspy is not None:
                 auto=None,
                 verbose=False,
             )
+            method = "MIPROv2"
             trained = optimizer.compile(
                 improver,
                 trainset=dataset,
@@ -156,6 +159,7 @@ if dspy is not None:
             "best_score": best_score,
             "iterations": candidates,
             "best_prompt": best_prompt,
+            "method": method,
         }
         return trained, metrics
 

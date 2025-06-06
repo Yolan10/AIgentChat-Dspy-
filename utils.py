@@ -58,14 +58,15 @@ def _wrap_text(text: str, width: int = 150) -> str:
     return "\n".join(lines)
 
 
-def append_improvement_log(run_no: int, prompt: str) -> None:
+def append_improvement_log(run_no: int, prompt: str, method: str | None = None) -> None:
     """Append the improved prompt to a persistent text log."""
     ensure_logs_dir()
     path = os.path.join(config.LOGS_DIRECTORY, "improved_prompts.txt")
     ts = get_timestamp()
     wrapped = _wrap_text(prompt, 150)
+    method_part = f" method={method}" if method else ""
     with open(path, "a", encoding="utf-8") as fh:
-        fh.write(f"{ts} run={run_no} instructions=\"{wrapped}\"\n")
+        fh.write(f"{ts} run={run_no}{method_part} instructions=\"{wrapped}\"\n")
 
 
 def append_improver_instruction_log(run_no: int, prompt: str) -> None:
