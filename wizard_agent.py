@@ -101,7 +101,11 @@ class WizardAgent:
         dataset = build_dataset(self.history_buffer)
         improver, metrics = train_improver(dataset)
 
-        self.current_prompt = metrics.get("best_prompt") or improver.agent.signature.instructions
+        logs_example = dataset[-1].logs if dataset else ""
+        result = improver(instruction=self.current_prompt, logs=logs_example, goal=self.goal)
+        self.current_prompt = getattr(result, "improved_prompt", self.current_prompt)
+        improver_instructions = metrics.get("best_prompt") or improver.agent.signature.instructions
+        utils.append_improver_instruction_log(self.current_run_no, improver_instructions)
 
         log_path = f"improve_{utils.get_timestamp().replace(':', '').replace('-', '')}.json"
         utils.save_conversation_log({"prompt": self.current_prompt, "metrics": metrics}, log_path)
