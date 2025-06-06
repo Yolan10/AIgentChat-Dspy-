@@ -118,6 +118,7 @@ if dspy is not None:
         improver = WizardImprover()
         if len(dataset) <= config.DSPY_COPRO_MINIBATCH_SIZE:
             optimizer = dspy.COPRO(metric=metric)
+            method = "COPRO"
             trained = optimizer.compile(
                 improver,
                 trainset=dataset,
@@ -125,6 +126,7 @@ if dspy is not None:
             )
         elif len(dataset) < config.DSPY_MIPRO_MINIBATCH_SIZE:
             optimizer = dspy.teleprompt.BootstrapFewShot(metric=metric)
+            method = "BootstrapFewShot"
             trained = optimizer.compile(
                 improver,
                 trainset=dataset,
@@ -143,6 +145,8 @@ if dspy is not None:
             # minibatch accordingly so it never exceeds the validation set size.
             valset_size = int(len(dataset) * 0.8)
             minibatch = min(config.DSPY_MIPRO_MINIBATCH_SIZE, valset_size)
+
+
             trained = optimizer.compile(
                 improver,
                 trainset=dataset,
@@ -163,6 +167,7 @@ if dspy is not None:
             "best_score": best_score,
             "iterations": candidates,
             "best_prompt": best_prompt,
+            "method": method,
         }
         return trained, metrics
 
