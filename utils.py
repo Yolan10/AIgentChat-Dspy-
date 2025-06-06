@@ -46,6 +46,15 @@ def format_agent_id(run_no: int, index: int) -> str:
     return f"{run_no}.{index}_{ts}"
 
 
+def append_improvement_log(run_no: int, prompt: str) -> None:
+    """Append a single line entry of the improved prompt to a text log."""
+    ensure_logs_dir()
+    path = os.path.join(config.LOGS_DIRECTORY, "improved_prompts.txt")
+    ts = get_timestamp()
+    with open(path, "a", encoding="utf-8") as fh:
+        fh.write(f"{ts} run={run_no} prompt={prompt}\n")
+
+
 def save_conversation_log(log_obj: dict, filename: str) -> None:
     """Save a conversation log as JSON under the logs directory."""
     ensure_logs_dir()

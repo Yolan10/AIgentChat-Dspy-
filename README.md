@@ -38,6 +38,13 @@ When a population agent is spawned its specification is immediately written to a
 log file (e.g. `1.1_<timestamp>_spec_*.json`) so you can inspect it while the
 simulation continues. Prompt improvements made by the wizard are also logged in
 real time with filenames beginning with `improve_`.
+Each improved prompt is additionally appended as a single line to
+`logs/improved_prompts.txt` along with the run number and timestamp.
+
+Each invocation of `IntegratedSystem.run` increments `logs/run_counter.txt` and
+agents are labelled using `<run>.<index>_<timestamp>` (e.g. `2.1_20240101T120000Z`).
+The index increases sequentially for each population agent created during a run
+(`1.1`, `1.2`, ...).
 
 Each invocation of `IntegratedSystem.run` increments `logs/run_counter.txt` and
 agents are labelled using `<run>.<index>_<timestamp>` (e.g. `2.1_20240101T120000Z`).
