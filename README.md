@@ -23,7 +23,7 @@ Simple chat simulation using LangChain and Dspy.
 3. Run the simulation:
 
    ```bash
-   python run_simulation.py
+   python main.py
    ```
 
 Logs are saved under the `logs/` directory.

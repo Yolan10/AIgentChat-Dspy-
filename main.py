@@ -1,4 +1,4 @@
-"""Entry point for the integrated system using new features."""
+"""Unified entry point running the integrated system."""
 from __future__ import annotations
 
 import config
