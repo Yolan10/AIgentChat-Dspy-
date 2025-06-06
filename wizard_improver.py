@@ -49,8 +49,11 @@ if dspy is not None:
         sig = getattr(program, "signature", None)
         if sig is not None and hasattr(sig, "instructions"):
             text = sig.instructions
-            if isinstance(text, str):
-                return text.strip()
+            if isinstance(text, str) and text.strip():
+                cleaned = text.strip()
+                if cleaned == "Signature for generating a better system prompt.":
+                    return utils.load_template(config.WIZARD_PROMPT_TEMPLATE_PATH).strip()
+                return cleaned
 
         # Otherwise handle the value as a plain string
         if not isinstance(program, str):
