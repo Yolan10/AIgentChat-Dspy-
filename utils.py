@@ -68,6 +68,16 @@ def append_improvement_log(run_no: int, prompt: str) -> None:
         fh.write(f"{ts} run={run_no} instructions=\"{wrapped}\"\n")
 
 
+def append_improver_instruction_log(run_no: int, prompt: str) -> None:
+    """Append the prompt-improver instructions to a separate log."""
+    ensure_logs_dir()
+    path = os.path.join(config.LOGS_DIRECTORY, "improver_instructions.txt")
+    ts = get_timestamp()
+    wrapped = _wrap_text(prompt, 150)
+    with open(path, "a", encoding="utf-8") as fh:
+        fh.write(f"{ts} run={run_no} instructions=\"{wrapped}\"\n")
+
+
 
 def save_conversation_log(log_obj: dict, filename: str) -> None:
     """Save a conversation log as JSON under the logs directory."""
