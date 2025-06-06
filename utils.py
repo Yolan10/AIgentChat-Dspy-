@@ -47,7 +47,7 @@ def format_agent_id(run_no: int, index: int) -> str:
 
 
 
- def _wrap_text(text: str, width: int = 100) -> str:
+def _wrap_text(text: str, width: int = 100) -> str:
     """Return text wrapped with newline every `width` characters."""
     lines = []
     for line in text.splitlines():
