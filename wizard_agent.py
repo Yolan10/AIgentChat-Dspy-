@@ -42,6 +42,11 @@ class WizardAgent:
         self.current_prompt = utils.render_template(self.system_prompt_template, {"goal": self.goal})
         self.conversation_count = 0
         self.history_buffer: List[ConversationLog] = []
+        self.current_run_no = 0
+
+    def set_run(self, run_no: int) -> None:
+        """Record the current run number for logging."""
+        self.current_run_no = run_no
 
     def converse_with(self, pop_agent, show_live: bool = False) -> ConversationLog:
 
@@ -100,5 +105,6 @@ class WizardAgent:
         log_path = f"improve_{utils.get_timestamp().replace(':', '').replace('-', '')}.json"
         utils.save_conversation_log({"prompt": self.current_prompt, "metrics": metrics}, log_path)
         print(f"Wizard improved prompt saved to {log_path}")
+        utils.append_improvement_log(self.current_run_no, self.current_prompt)
 
         self.history_buffer.clear()

@@ -35,19 +35,29 @@ wizard optimizer trains on conversation history. If fewer examples are
 available, the system automatically falls back to `dspy.COPRO` for training.
 
 When a population agent is spawned its specification is immediately written to a
-log file (e.g. `Pop_001_spec_*.json`) so you can inspect it while the
+log file (e.g. `1.1_<timestamp>_spec_*.json`) so you can inspect it while the
 simulation continues. Prompt improvements made by the wizard are also logged in
 real time with filenames beginning with `improve_`.
+Each improved prompt is additionally appended to `logs/improved_prompts.txt`
+with the run number and timestamp. Entries are prefixed with
+`instructions=` and long prompts are wrapped every 100 characters for
+readability.
+
+Each invocation of `IntegratedSystem.run` increments `logs/run_counter.txt`, which
+persists the latest run number between executions. Population agents are labelled
+as `<run>.<index>_<timestamp>` (e.g. `2.1_20240101T120000Z`).
+The index increases sequentially for each population agent created during a run
+(`1.1`, `1.2`, ...).
 
 ## Summary Output
 
-After running the simulation a `summary.json` file is written under `logs/`.
+After running the simulation a `summary_<run>.json` file is written under `logs/`.
 Each entry contains the results for a population agent with the following
 fields:
 
 ```json
 {
-  "pop_agent_id": "Pop_001",
+  "pop_agent_id": "1.1_20240101T120000Z",
   "name": "Alice",
   "personality_description": "eager shopper",
   "system_instruction": "You are Alice. eager shopper. Respond accordingly.",
