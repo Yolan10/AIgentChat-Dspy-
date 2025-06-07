@@ -163,7 +163,6 @@ if dspy is not None:
             trained = optimizer.compile(
                 improver_module,
                 trainset=dataset,
-                eval_kwargs={"provide_traceback": True},
             )
 
         candidates = getattr(trained, "candidate_programs", [])
