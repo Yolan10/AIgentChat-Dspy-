@@ -125,7 +125,7 @@ if dspy is not None:
             bonus = 1.0 if "buy" in pred.improved_prompt.lower() else 0.0
             return base + bonus
 
-        improver = WizardImprover()
+        improver_module = WizardImprover()
         if len(dataset) >= config.DSPY_MIPRO_MINIBATCH_SIZE:
             optimizer = OptimizePrompts(
                 metric=metric,
@@ -144,7 +144,7 @@ if dspy is not None:
 
             method = "MIPROv2"
             trained = optimizer.compile(
-                improver,
+                improver_module,
                 trainset=dataset,
                 num_trials=config.DSPY_TRAINING_ITER,
                 provide_traceback=True,
@@ -154,14 +154,14 @@ if dspy is not None:
             optimizer = dspy.teleprompt.BootstrapFewShot(metric=metric)
             method = "BootstrapFewShot"
             trained = optimizer.compile(
-                improver,
+                improver_module,
                 trainset=dataset,
             )
         else:
             optimizer = dspy.COPRO(metric=metric)
             method = "COPRO"
             trained = optimizer.compile(
-                improver,
+                improver_module,
                 trainset=dataset,
                 eval_kwargs={"provide_traceback": True},
             )
