@@ -133,6 +133,7 @@ if dspy is not None:
                 auto=None,
                 verbose=False,
             )
+            method = "MIPROv2"
             # DSPy derives the validation set as 80% of the trainset. When the
             # dataset is small this can make the validation size smaller than
             # ``DSPY_MIPRO_MINIBATCH_SIZE`` which causes ``compile`` to raise a
