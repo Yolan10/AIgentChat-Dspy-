@@ -34,15 +34,13 @@ simulation runs.
 single integer to run the improver every *n* conversations or a list of counts
 like `[1, 10, 15]` (or the string `"1;10;15"`) to trigger improvements only at
 those points.
-`DSPY_COPRO_MINIBATCH_SIZE`, `DSPY_BOOTSRAP_MINIBATCH_SIZE`, and
-`DSPY_MIPRO_MINIBATCH_SIZE` control how many conversation logs trigger each DSPy
-optimizer.
-When the history contains at most `DSPY_COPRO_MINIBATCH_SIZE` examples the
-wizard runs `dspy.COPRO` with an empty dataset. With only a few examples
-(fewer than `DSPY_BOOTSRAP_MINIBATCH_SIZE`) it uses `BootstrapFewShot` to
-augment the data. Once at least `DSPY_BOOTSRAP_MINIBATCH_SIZE` examples are
-available it trains using MIPROv2 (`OptimizePrompts`) with a minibatch size of
-`DSPY_MIPRO_MINIBATCH_SIZE`.
+`DSPY_BOOTSRAP_MINIBATCH_SIZE` and `DSPY_MIPRO_MINIBATCH_SIZE` control when each
+DSPy optimizer runs. Once the dataset reaches
+`DSPY_MIPRO_MINIBATCH_SIZE` examples the wizard trains with MIPROv2
+(`OptimizePrompts`). If the dataset has at least
+`DSPY_BOOTSRAP_MINIBATCH_SIZE` examples but fewer than
+`DSPY_MIPRO_MINIBATCH_SIZE`, it uses `BootstrapFewShot`. With fewer examples the
+wizard falls back to `dspy.COPRO`.
 
 Each conversation log now records the wizard's system instruction. The
 optimization dataset therefore pairs that instruction with the conversation

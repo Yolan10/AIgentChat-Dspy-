@@ -41,7 +41,6 @@ SHOW_LIVE_CONVERSATIONS = True
 DSPY_TRAINING_ITER = 1
 DSPY_LEARNING_RATE = 0.01
 # Optimizer thresholds
-DSPY_COPRO_MINIBATCH_SIZE = 0
 DSPY_BOOTSRAP_MINIBATCH_SIZE = 3
 DSPY_MIPRO_MINIBATCH_SIZE = 30
 # Maximum number of conversation logs kept in memory for self improvement
