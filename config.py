@@ -50,3 +50,19 @@ POP_HISTORY_LIMIT = 50
 
 # Miscellaneous
 DEFAULT_TIMEZONE = "UTC"
+
+# Ensure population size is sufficient for the self-improvement schedule
+_schedule = SELF_IMPROVE_AFTER
+if isinstance(_schedule, str):
+    _schedule = [int(x) for x in _schedule.split(";") if x.strip()]
+elif isinstance(_schedule, int):
+    _schedule = [_schedule]
+else:
+    _schedule = [int(x) for x in _schedule]
+
+if _schedule:
+    max_point = max(_schedule)
+    if POPULATION_SIZE < max_point:
+        raise ValueError(
+            f"POPULATION_SIZE ({POPULATION_SIZE}) must be >= highest SELF_IMPROVE_AFTER value ({max_point})."
+        )
