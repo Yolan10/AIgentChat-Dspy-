@@ -55,7 +55,8 @@ simulation continues. Prompt improvements made by the wizard are also logged in
 real time with filenames beginning with `improve_`.
 
 Each improved prompt is additionally appended to `logs/improved_prompts.txt`
-with the run number, the optimizer method used, and the timestamp.
+with the run number, the conversation count when the improvement occurred,
+the dataset size at that time, the optimizer method used, and the timestamp.
 Entries are prefixed with `instructions=` and long prompts are wrapped
 every 150 characters for readability. The prompt improver's own
 instructions are logged separately
