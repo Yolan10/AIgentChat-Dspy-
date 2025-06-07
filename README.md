@@ -33,7 +33,8 @@ simulation runs.
 `SELF_IMPROVE_AFTER` controls when the wizard optimizes its prompt. Provide a
 single integer to run the improver every *n* conversations or a list of counts
 like `[1, 10, 15]` (or the string `"1;10;15"`) to trigger improvements only at
-those points.
+those points. The configuration checks that `POPULATION_SIZE` is at least as
+large as the final value in this schedule and raises an error otherwise.
 `DSPY_BOOTSRAP_MINIBATCH_SIZE` and `DSPY_MIPRO_MINIBATCH_SIZE` control when each
 DSPy optimizer runs. Once the dataset reaches
 `DSPY_MIPRO_MINIBATCH_SIZE` examples the wizard trains with MIPROv2

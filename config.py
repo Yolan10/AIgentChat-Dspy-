@@ -1,7 +1,9 @@
 # Configuration file containing all tunable parameters and defaults.
 
 # Population Settings
-POPULATION_SIZE = 10
+# Default population size. The value must be at least as large as the
+# highest value in ``SELF_IMPROVE_AFTER`` when that setting is a sequence.
+POPULATION_SIZE = 36
 POPULATION_INSTRUCTION_TEMPLATE_PATH = "templates/population_instruction.txt"
 
 # Wizard Settings
@@ -14,7 +16,8 @@ MAX_TURNS = 20
 #
 #     SELF_IMPROVE_AFTER = [1, 10, 15]  # improve after conversations 1, 10 and 15
 #     SELF_IMPROVE_AFTER = 10           # improve after 10, 20, 30, ...
-SELF_IMPROVE_AFTER = 10
+# Trigger improvements after conversations 1, 5 and 36 by default.
+SELF_IMPROVE_AFTER = [1, 5, 36]
 SELF_IMPROVE_PROMPT_TEMPLATE_PATH = "templates/self_improve_prompt.txt"
 
 # Judge Settings
@@ -50,3 +53,28 @@ POP_HISTORY_LIMIT = 50
 
 # Miscellaneous
 DEFAULT_TIMEZONE = "UTC"
+
+
+def _get_last_schedule_point(schedule):
+    """Return the last integer from the self-improvement schedule."""
+    if isinstance(schedule, int):
+        return schedule
+    if isinstance(schedule, str):
+        try:
+            points = [int(x) for x in schedule.split(";") if x.strip()]
+        except ValueError:
+            return None
+        return points[-1] if points else None
+    try:
+        points = [int(x) for x in schedule]
+    except (TypeError, ValueError):
+        return None
+    return points[-1] if points else None
+
+
+_last_point = _get_last_schedule_point(SELF_IMPROVE_AFTER)
+if _last_point is not None and POPULATION_SIZE < _last_point:
+    raise ValueError(
+        f"POPULATION_SIZE ({POPULATION_SIZE}) must be at least "
+        f"as large as the last entry in SELF_IMPROVE_AFTER ({_last_point})"
+    )
