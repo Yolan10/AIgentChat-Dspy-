@@ -126,22 +126,7 @@ if dspy is not None:
             return base + bonus
 
         improver = WizardImprover()
-        if len(dataset) <= config.DSPY_COPRO_MINIBATCH_SIZE:
-            optimizer = dspy.COPRO(metric=metric)
-            method = "COPRO"
-            trained = optimizer.compile(
-                improver,
-                trainset=dataset,
-                eval_kwargs={"provide_traceback": True},
-            )
-        elif len(dataset) < config.DSPY_MIPRO_MINIBATCH_SIZE:
-            optimizer = dspy.teleprompt.BootstrapFewShot(metric=metric)
-            method = "BootstrapFewShot"
-            trained = optimizer.compile(
-                improver,
-                trainset=dataset,
-            )
-        else:
+        if len(dataset) >= config.DSPY_MIPRO_MINIBATCH_SIZE:
             optimizer = OptimizePrompts(
                 metric=metric,
                 num_candidates=4,
@@ -156,13 +141,28 @@ if dspy is not None:
             valset_size = int(len(dataset) * 0.8)
             minibatch = min(config.DSPY_MIPRO_MINIBATCH_SIZE, valset_size)
 
-
+            method = "MIPROv2"
             trained = optimizer.compile(
                 improver,
                 trainset=dataset,
                 num_trials=config.DSPY_TRAINING_ITER,
                 provide_traceback=True,
                 minibatch_size=minibatch,
+            )
+        elif len(dataset) >= config.DSPY_BOOTSRAP_MINIBATCH_SIZE:
+            optimizer = dspy.teleprompt.BootstrapFewShot(metric=metric)
+            method = "BootstrapFewShot"
+            trained = optimizer.compile(
+                improver,
+                trainset=dataset,
+            )
+        else:
+            optimizer = dspy.COPRO(metric=metric)
+            method = "COPRO"
+            trained = optimizer.compile(
+                improver,
+                trainset=dataset,
+                eval_kwargs={"provide_traceback": True},
             )
 
         candidates = getattr(trained, "candidate_programs", [])
