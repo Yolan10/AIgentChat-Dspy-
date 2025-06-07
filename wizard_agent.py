@@ -121,8 +121,16 @@ class WizardAgent:
         utils.append_improver_instruction_log(self.current_run_no, improver_instructions)
 
         log_path = f"improve_{utils.get_timestamp().replace(':', '').replace('-', '')}.json"
-        utils.save_conversation_log({"prompt": self.current_prompt, "metrics": metrics}, log_path)
+        utils.save_conversation_log(
+            {"prompt": self.current_prompt, "metrics": metrics}, log_path
+        )
         print(f"Wizard improved prompt saved to {log_path}")
-        utils.append_improvement_log(self.current_run_no, self.current_prompt, metrics.get("method"))
+        utils.append_improvement_log(
+            self.current_run_no,
+            self.current_prompt,
+            metrics.get("method"),
+            conv_no=self.conversation_count,
+            dataset_size=len(dataset),
+        )
 
         self.history_buffer.clear()
